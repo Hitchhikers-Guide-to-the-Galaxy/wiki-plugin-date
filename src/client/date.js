@@ -175,43 +175,117 @@ const formatNL = (date, span) => {
   }
 }
 
+// ── Style extraction ──────────────────────────────────────────────────────────
+// Scans for a `STYLE <name>` line, removes it, returns { style, lines }.
+// Default style is TYPOGRAPHIC (the original appearance).
+
+export const STYLES = ['TYPOGRAPHIC', 'PLAIN', 'COMPACT', 'TABLE']
+
+export const extractStyle = text => {
+  let style = 'TYPOGRAPHIC'
+  const lines = []
+  for (const raw of (text || '').split('\n')) {
+    const m = raw.trim().match(/^STYLE\s+(\S+)$/i)
+    if (m) { style = m[1].toUpperCase(); continue }
+    lines.push(raw)
+  }
+  return { style, lines }
+}
+
 // ── Visual rendering ──────────────────────────────────────────────────────────
 
 const pad2 = n => String(n).padStart(2, '0')
 
-// Format a Date as a typographic display string:
-//   point  →  15\nJANUARY\n2026
-//   range  →  start..end  (single-line abbreviated)
-const renderPoint = (date, span) => {
+// Shared short date formatter
+const fmtShort = d => `${pad2(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`
+const fmtISO   = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`
+const isRange  = ev => ev.start.getTime() !== ev.end.getTime()
+
+// ── TYPOGRAPHIC (default) ─────────────────────────────────────────────────────
+
+const renderPointTypo = (date, span) => {
   if (span === 'YEAR')   return `<div class="date-year">${date.getFullYear()}</div>`
   if (span === 'DECADE') return `<div class="date-year">${date.getFullYear()}'s</div>`
   if (span === 'MONTH') {
     return `<div class="date-month-name">${MONTHS[date.getMonth()]}</div>` +
            `<div class="date-year">${date.getFullYear()}</div>`
   }
-  // DAY
   return `<div class="date-day">${pad2(date.getDate())}</div>` +
          `<div class="date-month-name">${MONTHS[date.getMonth()]}</div>` +
          `<div class="date-year">${date.getFullYear()}</div>`
 }
 
-const renderRange = (start, end, span) => {
-  const fmt = d => `${pad2(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`
-  return `<div class="date-range"><span class="date-range-start">${fmt(start)}</span>` +
-         `<span class="date-range-sep">–</span>` +
-         `<span class="date-range-end">${fmt(end)}</span></div>`
+const renderRangeTypo = (start, end) =>
+  `<div class="date-range">` +
+  `<span class="date-range-start">${fmtShort(start)}</span>` +
+  `<span class="date-range-sep">–</span>` +
+  `<span class="date-range-end">${fmtShort(end)}</span></div>`
+
+const groupBadge = ev =>
+  ev.group ? `<div class="date-group date-group-${ev.group.toLowerCase().replace(/\s+/g,'-')}">${ev.group}</div>` : ''
+
+const renderEventTypo = ev => {
+  const body = isRange(ev)
+    ? renderRangeTypo(ev.start, ev.end)
+    : renderPointTypo(ev.start, ev.span)
+  return `<div class="date-event">${body}${groupBadge(ev)}</div>`
 }
 
-const isRange = ev => ev.start.getTime() !== ev.end.getTime()
+// ── PLAIN ─────────────────────────────────────────────────────────────────────
+// Simple text list: one line per event
 
-const renderEvent = ev => {
-  const body = isRange(ev)
-    ? renderRange(ev.start, ev.end, ev.span)
-    : renderPoint(ev.start, ev.span)
-  const group = ev.group
-    ? `<div class="date-group date-group-${ev.group.toLowerCase().replace(/\s+/g,'-')}">${ev.group}</div>`
-    : ''
-  return `<div class="date-event">${body}${group}</div>`
+const fmtDatePlain = (ev) => {
+  if (isRange(ev)) return `${fmtShort(ev.start)} – ${fmtShort(ev.end)}`
+  if (ev.span === 'YEAR')   return String(ev.start.getFullYear())
+  if (ev.span === 'DECADE') return `${ev.start.getFullYear()}'s`
+  if (ev.span === 'MONTH')  return `${MONTHS[ev.start.getMonth()]} ${ev.start.getFullYear()}`
+  return fmtShort(ev.start)
+}
+
+const renderEventPlain = ev => {
+  const date  = fmtDatePlain(ev)
+  const label = ev.label ? ` — ${ev.label}` : ''
+  const group = ev.group ? ` <span class="date-plain-group">#${ev.group}</span>` : ''
+  return `<div class="date-plain-row"><span class="date-plain-date">${date}</span>${label}${group}</div>`
+}
+
+// ── COMPACT ───────────────────────────────────────────────────────────────────
+// Inline pills, all on one line
+
+const renderEventCompact = ev => {
+  const date  = fmtDatePlain(ev)
+  const label = ev.label ? ` ${ev.label}` : ''
+  const group = ev.group ? ` <span class="date-compact-group">#${ev.group}</span>` : ''
+  return `<span class="date-compact-pill">${date}${label}${group}</span>`
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────────────
+// Three-column table: date | label | group
+
+const renderEventsTable = events => {
+  const rows = events.map(ev => {
+    const date  = fmtDatePlain(ev)
+    const label = ev.label || ''
+    const group = ev.group || ''
+    return `<tr><td class="date-td-date">${date}</td>` +
+           `<td class="date-td-label">${label}</td>` +
+           `<td class="date-td-group">${group ? `<span class="date-group">${group}</span>` : ''}</td></tr>`
+  })
+  return `<table class="date-table">` +
+         `<thead><tr><th>Date</th><th>Event</th><th>Group</th></tr></thead>` +
+         `<tbody>${rows.join('')}</tbody></table>`
+}
+
+// ── Dispatch ──────────────────────────────────────────────────────────────────
+
+const renderEvents = (events, style) => {
+  if (!events.length) return '<em>no date</em>'
+  switch (style) {
+    case 'PLAIN':   return events.map(renderEventPlain).join('')
+    case 'COMPACT': return events.map(renderEventCompact).join('')
+    case 'TABLE':   return renderEventsTable(events)
+    default:        return events.map(renderEventTypo).join('')
+  }
 }
 
 const CSS = `
@@ -224,6 +298,7 @@ const CSS = `
   margin-bottom: 6px;
   line-height: 1.1;
 }
+/* TYPOGRAPHIC */
 .date-event { display: inline-block; margin-right: 1em; vertical-align: top; }
 .date-day   { font-size: 2.4em; font-weight: bold; color: #222; line-height: 1; }
 .date-month-name { font-size: .85em; text-transform: uppercase; letter-spacing: .08em; color: #555; }
@@ -236,6 +311,23 @@ const CSS = `
   font-size: .72em; font-family: sans-serif;
   background: #dde; color: #334; letter-spacing: .04em;
 }
+/* PLAIN */
+.date-plain-row { font-family: sans-serif; font-size: .9em; color: #333; padding: .15em 0; }
+.date-plain-date { font-weight: 600; margin-right: .2em; }
+.date-plain-group { color: #779; font-size: .85em; }
+/* COMPACT */
+.date-compact-pill {
+  display: inline-block; margin: .15em .3em .15em 0;
+  padding: .15em .5em; border-radius: 12px;
+  background: #eef; border: 1px solid #ccd;
+  font-family: sans-serif; font-size: .82em; color: #334;
+}
+.date-compact-group { color: #779; }
+/* TABLE */
+.date-table { border-collapse: collapse; font-family: sans-serif; font-size: .88em; width: 100%; }
+.date-table th { text-align: left; color: #999; font-weight: 500; border-bottom: 1px solid #ddd; padding: .2em .4em; font-size: .85em; }
+.date-table td { padding: .25em .4em; border-bottom: 1px solid #eee; color: #333; }
+.date-td-date { white-space: nowrap; color: #555; }
 </style>`
 
 let cssInjected = false
@@ -249,9 +341,8 @@ const injectCSS = () => {
 
 export const emit = ($item, item) => {
   injectCSS()
-  const text   = item.text || ''
-  const lines  = text.split(/\n/).filter(l => l.trim())
-  const parsed = lines.map(parseLine)
+  const { style, lines } = extractStyle(item.text || '')
+  const parsed = lines.filter(l => l.trim()).map(parseLine)
 
   // Determine page title from wiki context if available
   const pageTitle = (() => {
@@ -259,16 +350,14 @@ export const emit = ($item, item) => {
   })()
 
   const events = resolveEntries(parsed, pageTitle)
-  const html = events.map(renderEvent).join('')
-  $item.html(`<div class="wiki-plugin-date">${html || '<em>no date</em>'}</div>`)
+  $item.html(`<div class="wiki-plugin-date">${renderEvents(events, style)}</div>`)
 }
 
 // ── bind ──────────────────────────────────────────────────────────────────────
 
 export const bind = ($item, item) => {
-  const text     = item.text || ''
-  const lines    = text.split(/\n/).filter(l => l.trim())
-  const parsed   = lines.map(parseLine)
+  const { lines } = extractStyle(item.text || '')
+  const parsed   = lines.filter(l => l.trim()).map(parseLine)
 
   const pageTitle = (() => {
     try { return $item.closest('.page').find('h1').text().trim() } catch { return '' }

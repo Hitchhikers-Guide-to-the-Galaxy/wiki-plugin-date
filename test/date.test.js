@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert'
-import { parseLine, resolveEntries } from '../src/client/date.js'
+import { parseLine, resolveEntries, extractStyle, STYLES } from '../src/client/date.js'
 
 // ── parseLine ─────────────────────────────────────────────────────────────────
 
@@ -93,4 +93,36 @@ test('natural-language carry-forward year', () => {
   assert.equal(events[1].start.getFullYear(), 1967)
   assert.equal(events[1].start.getMonth(), 0)
   assert.equal(events[1].start.getDate(), 14)
+})
+
+// ── extractStyle ──────────────────────────────────────────────────────────────
+
+console.log('extractStyle')
+
+test('defaults to TYPOGRAPHIC when no STYLE line', () => {
+  const { style, lines } = extractStyle('2026-01-15 Wiki Wild Compo')
+  assert.equal(style, 'TYPOGRAPHIC')
+  assert.equal(lines.length, 1)
+})
+
+test('extracts STYLE PLAIN and removes the line', () => {
+  const { style, lines } = extractStyle('STYLE PLAIN\n2026-01-15 Event')
+  assert.equal(style, 'PLAIN')
+  assert.deepEqual(lines, ['2026-01-15 Event'])
+})
+
+test('is case-insensitive', () => {
+  const { style } = extractStyle('style compact\n2026-01-15')
+  assert.equal(style, 'COMPACT')
+})
+
+test('strips STYLE line leaving remaining event lines intact', () => {
+  const text = '2026-01-01 First\nSTYLE TABLE\n2026-06-01 Second'
+  const { style, lines } = extractStyle(text)
+  assert.equal(style, 'TABLE')
+  assert.equal(lines.length, 2)
+})
+
+test('STYLES exports the four canonical names', () => {
+  assert.deepEqual(STYLES, ['TYPOGRAPHIC', 'PLAIN', 'COMPACT', 'TABLE'])
 })

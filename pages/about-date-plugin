@@ -23,6 +23,56 @@
     },
     {
       "type": "markdown",
+      "id": "gj1pl92c",
+      "text": "## Styles"
+    },
+    {
+      "type": "paragraph",
+      "id": "8hjkevh5",
+      "text": "Add `STYLE <name>` on any line to change how dates are rendered. The STYLE line is stripped before event parsing — it can appear anywhere in the item text."
+    },
+    {
+      "type": "markdown",
+      "id": "rrjw6mut",
+      "text": "**STYLE TYPOGRAPHIC** (default) — large stacked day / month / year"
+    },
+    {
+      "type": "date",
+      "id": "xsnhmf9b",
+      "text": "STYLE TYPOGRAPHIC\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+    },
+    {
+      "type": "markdown",
+      "id": "vq2vdk3f",
+      "text": "**STYLE PLAIN** — minimal text list, one line per event"
+    },
+    {
+      "type": "date",
+      "id": "g0lgwhk1",
+      "text": "STYLE PLAIN\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+    },
+    {
+      "type": "markdown",
+      "id": "vb97einc",
+      "text": "**STYLE COMPACT** — inline pill badges"
+    },
+    {
+      "type": "date",
+      "id": "jul55qnb",
+      "text": "STYLE COMPACT\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+    },
+    {
+      "type": "markdown",
+      "id": "mhdduai7",
+      "text": "**STYLE TABLE** — three-column table: date / event / group"
+    },
+    {
+      "type": "date",
+      "id": "hrdf2o11",
+      "text": "STYLE TABLE\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+    },
+    {
+      "type": "markdown",
       "id": "d6fce2f8fd4b7000",
       "text": "## Data Interface"
     },
@@ -94,6 +144,106 @@
       },
       "date": 1750758000000,
       "provenance": "Authored by an AI agent — Claude Code (claude-sonnet-4-6) via the fedwiki-create-plugin skill. [https://claude.com/claude-code Claude Code]"
+    },
+    {
+      "type": "add",
+      "id": "xho063ov",
+      "date": 1782339079390,
+      "item": {
+        "type": "markdown",
+        "id": "gj1pl92c",
+        "text": "## Styles"
+      }
+    },
+    {
+      "type": "add",
+      "id": "6s4mkp1o",
+      "date": 1782339079390,
+      "item": {
+        "type": "paragraph",
+        "id": "8hjkevh5",
+        "text": "Add `STYLE <name>` on any line to change how dates are rendered. The STYLE line is stripped before event parsing — it can appear anywhere in the item text."
+      }
+    },
+    {
+      "type": "add",
+      "id": "jlrwpv5z",
+      "date": 1782339079390,
+      "item": {
+        "type": "markdown",
+        "id": "rrjw6mut",
+        "text": "**STYLE TYPOGRAPHIC** (default) — large stacked day / month / year"
+      }
+    },
+    {
+      "type": "add",
+      "id": "068lny73",
+      "date": 1782339079390,
+      "item": {
+        "type": "date",
+        "id": "xsnhmf9b",
+        "text": "STYLE TYPOGRAPHIC\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+      }
+    },
+    {
+      "type": "add",
+      "id": "7a8butg5",
+      "date": 1782339079390,
+      "item": {
+        "type": "markdown",
+        "id": "vq2vdk3f",
+        "text": "**STYLE PLAIN** — minimal text list, one line per event"
+      }
+    },
+    {
+      "type": "add",
+      "id": "10hh69bg",
+      "date": 1782339079390,
+      "item": {
+        "type": "date",
+        "id": "g0lgwhk1",
+        "text": "STYLE PLAIN\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+      }
+    },
+    {
+      "type": "add",
+      "id": "j5bocotg",
+      "date": 1782339079390,
+      "item": {
+        "type": "markdown",
+        "id": "vb97einc",
+        "text": "**STYLE COMPACT** — inline pill badges"
+      }
+    },
+    {
+      "type": "add",
+      "id": "ftkmre4q",
+      "date": 1782339079390,
+      "item": {
+        "type": "date",
+        "id": "jul55qnb",
+        "text": "STYLE COMPACT\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+      }
+    },
+    {
+      "type": "add",
+      "id": "0pg8su2d",
+      "date": 1782339079390,
+      "item": {
+        "type": "markdown",
+        "id": "mhdduai7",
+        "text": "**STYLE TABLE** — three-column table: date / event / group"
+      }
+    },
+    {
+      "type": "add",
+      "id": "wajfmomb",
+      "date": 1782339079390,
+      "item": {
+        "type": "date",
+        "id": "hrdf2o11",
+        "text": "STYLE TABLE\n2026-01-15 Wiki Wild Compo\n2026-02-01..2026-05-30 Demoscene Exhibition #Projects"
+      }
     }
   ],
   "plugin": "date"
