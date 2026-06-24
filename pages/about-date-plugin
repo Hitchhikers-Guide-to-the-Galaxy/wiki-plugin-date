@@ -1,0 +1,100 @@
+{
+  "title": "About Date Plugin",
+  "story": [
+    {
+      "type": "markdown",
+      "id": "b9f4039e5a75c5b3",
+      "text": "The Date Plugin marks a wiki page as a time-located event. It renders the date as a typographic display and exposes a `calendar-source` data interface consumed by the [[About Timeline Plugin]]."
+    },
+    {
+      "type": "date",
+      "id": "dad3a887165d2615",
+      "text": "2026-02-01..2026-05-30 Wiki Wild Compo #Demoscene"
+    },
+    {
+      "type": "markdown",
+      "id": "055e5f5a1d86c4a9",
+      "text": "## DSL"
+    },
+    {
+      "type": "markdown",
+      "id": "401ef81204f5fe9c",
+      "text": "One line per event. The first matching syntax wins:\n\n| Syntax | Example |\n|---|---|\n| ISO point | `2026-01-15` |\n| ISO range | `2026-02-01..2026-05-30` |\n| Group tag | `#GroupName` |\n| Label override | `2026-02-01 My Event` |\n| Natural language | `1967 Summer of Love` |\n\nWithout a label the page title is used. The label must match a wiki page title for click-to-navigate in the Timeline Plugin."
+    },
+    {
+      "type": "markdown",
+      "id": "d6fce2f8fd4b7000",
+      "text": "## Data Interface"
+    },
+    {
+      "type": "markdown",
+      "id": "efae8b278198c00a",
+      "text": "The plugin registers a `calendar-source` class and `calendarData()` method in `bind`:"
+    },
+    {
+      "type": "code",
+      "id": "cf1cbd76a116ef58",
+      "text": "$item.addClass('calendar-source')\n$item.get(0).calendarData = () => [{\n  label, start, end, span, group, page, site\n}]",
+      "language": "javascript"
+    },
+    {
+      "type": "markdown",
+      "id": "eb54563c01715e64",
+      "text": "Also exposes `radar-source` / `radarData()` for backwards compatibility with the Radar Plugin.\n\n## Repositories\n\n* [GitHub — wiki-plugin-date](https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-date)\n* [npm — wiki-plugin-date](https://www.npmjs.com/package/wiki-plugin-date)"
+    }
+  ],
+  "journal": [
+    {
+      "type": "create",
+      "item": {
+        "title": "About Date Plugin",
+        "story": [
+          {
+            "type": "markdown",
+            "id": "b9f4039e5a75c5b3",
+            "text": "The Date Plugin marks a wiki page as a time-located event. It renders the date as a typographic display and exposes a `calendar-source` data interface consumed by the [[About Timeline Plugin]]."
+          },
+          {
+            "type": "date",
+            "id": "dad3a887165d2615",
+            "text": "2026-02-01..2026-05-30 Wiki Wild Compo #Demoscene"
+          },
+          {
+            "type": "markdown",
+            "id": "055e5f5a1d86c4a9",
+            "text": "## DSL"
+          },
+          {
+            "type": "markdown",
+            "id": "401ef81204f5fe9c",
+            "text": "One line per event. The first matching syntax wins:\n\n| Syntax | Example |\n|---|---|\n| ISO point | `2026-01-15` |\n| ISO range | `2026-02-01..2026-05-30` |\n| Group tag | `#GroupName` |\n| Label override | `2026-02-01 My Event` |\n| Natural language | `1967 Summer of Love` |\n\nWithout a label the page title is used. The label must match a wiki page title for click-to-navigate in the Timeline Plugin."
+          },
+          {
+            "type": "markdown",
+            "id": "d6fce2f8fd4b7000",
+            "text": "## Data Interface"
+          },
+          {
+            "type": "markdown",
+            "id": "efae8b278198c00a",
+            "text": "The plugin registers a `calendar-source` class and `calendarData()` method in `bind`:"
+          },
+          {
+            "type": "code",
+            "id": "cf1cbd76a116ef58",
+            "text": "$item.addClass('calendar-source')\n$item.get(0).calendarData = () => [{\n  label, start, end, span, group, page, site\n}]",
+            "language": "javascript"
+          },
+          {
+            "type": "markdown",
+            "id": "eb54563c01715e64",
+            "text": "Also exposes `radar-source` / `radarData()` for backwards compatibility with the Radar Plugin.\n\n## Repositories\n\n* [GitHub — wiki-plugin-date](https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-date)\n* [npm — wiki-plugin-date](https://www.npmjs.com/package/wiki-plugin-date)"
+          }
+        ]
+      },
+      "date": 1750758000000,
+      "provenance": "Authored by an AI agent — Claude Code (claude-sonnet-4-6) via the fedwiki-create-plugin skill. [https://claude.com/claude-code Claude Code]"
+    }
+  ],
+  "plugin": "date"
+}

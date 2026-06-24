@@ -1,0 +1,27 @@
+{
+  "name": "wiki-plugin-date",
+  "version": "0.1.0",
+  "description": "Federated Wiki plugin — marks a page as a time-located event with a typographic date display and calendar-source data interface",
+  "type": "module",
+  "main": "client/date.js",
+  "files": ["client", "pages", "factory.json"],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "author": "David Bovill",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-date.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-date/issues"
+  },
+  "homepage": "https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-date#readme",
+  "engines": { "node": ">=18" }
+}
